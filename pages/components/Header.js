@@ -19,7 +19,6 @@ import {
 const Header = () => {
   return (
     <div>
-      <h1 className="">Header</h1>
       <div className="flex items-center">
         {/* Left */}
 
@@ -30,9 +29,13 @@ const Header = () => {
           height={40}
           layout="fixed"
         />
-        <div className="flex ml-2 item-center">
+        <div className="flex ml-2 item-center rounded-full bg-gray-100 p-2">
           <SearchIcon className="h-6" />
-          <input type="text" placeholder="Search Facebook" />
+          <input
+            className="flex ml-2 items-center bg-transparent outline-none placeholder-gray-502"
+            type="text"
+            placeholder="Search Facebook"
+          />
         </div>
       </div>
 
