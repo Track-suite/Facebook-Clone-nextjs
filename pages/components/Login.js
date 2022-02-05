@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 const Login = () => {
   return (
-    <div>
+    <div className="grid place-items-center">
       <Image
         alt="Facebook"
         src="https://links.papareact.com/t4i"
@@ -10,6 +10,7 @@ const Login = () => {
         width={400}
         objectFit="contain"
       />
+      <h1>Login with Facebook</h1>
     </div>
   );
 };
