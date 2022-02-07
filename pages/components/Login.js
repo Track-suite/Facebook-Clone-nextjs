@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+
 const Login = () => {
   return (
     <div className="grid place-items-center  ">

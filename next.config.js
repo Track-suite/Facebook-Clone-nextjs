@@ -1,8 +1,10 @@
 module.exports = {
+  reactStrictMode: true,
   images: {
     domains: [
+      "platform-lookaside.fbsbx.com",
       "links.papareact.com",
-      "platform-lookside.fbsbx.com",
+
       "firebasestorage.googleapis.com",
     ],
   },
