@@ -4,7 +4,7 @@ import StoryCard from "./StoryCard";
 
 const stories = [
   {
-    name: "Sonny Sinha",
+    name: "Asram Ahamed",
     src: "https://avatars.githubusercontent.com/u/64695863?v=4",
     profile: "https://avatars.githubusercontent.com/u/64695863?v=4",
   },
