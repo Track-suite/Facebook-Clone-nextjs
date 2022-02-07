@@ -2,12 +2,25 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
 import { CameraIcon, VideoCameraIcon } from "@heroicons/react/solid";
+import { useRef } from "react";
+import { db } from "../../firebase";
+import firbase from "firebase";
 
 const InputBox = () => {
   const { data: session } = useSession();
+  const inputRef = useRef(null);
 
   const sendPost = (e) => {
     e.preventDefault();
+
+    if (!inputRef.current.value) return;
+
+    db.collection("posts").add({
+      message: inputRef.current.value,
+      name: session.user.name,
+      email: session.user.email,
+      image: session.user.image,
+    });
   };
 
   return (
@@ -24,6 +37,7 @@ const InputBox = () => {
           <input
             className="rounded-full h-12 bg-gray-100 flex-grow px-5 focus:outline-none"
             type="text"
+            ref={inputRef}
             placeholder={`what's on your mind, ${session.user.name}?`}
           />
           <button hidden type="submit" onClick={sendPost}>
@@ -37,7 +51,7 @@ const InputBox = () => {
           <VideoCameraIcon className="h-7 text-red-500" />{" "}
           <p className="text-xs sm:text-sm xl:text-base">Live Video</p>
         </div>
-        <div className="inpuIcon">
+        <div className="inputIcon">
           <CameraIcon className="h-7 text-green-400" />
           <p className="text-xs sm:text-sm xl:text-base">Photos/Video</p>
         </div>
