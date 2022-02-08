@@ -2,11 +2,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
 import { CameraIcon, VideoCameraIcon } from "@heroicons/react/solid";
-// import { getFirestore, serverTimestamp, FieldValue } from "firebase/firestore";
+import { getFirestore, serverTimestamp, FieldValue } from "firebase/firestore";
 import { useRef } from "react";
 import { db } from "../../firebase";
 import firebase from "firebase/compat/app";
 import { collection, addDoc } from "firebase/firestore"; 
+
 
 
 const InputBox = () => {
@@ -18,13 +19,21 @@ const InputBox = () => {
 
     if (!inputRef.current.value) return;
 
-    db.collection("posts").doc({
+    const docRef = addDoc(collection(db, "posts"), {
       message: inputRef.current.value,
       name: session.user.name,
       email: session.user.email,
       image: session.user.image,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      // timestamp: firebase.firestore.FieldValue.serverTimestamp,
     });
+
+    //  db.collection("posts").add({
+    //    message: inputRef.current.value,
+    //    name: session.user.name,
+    //    email: session.user.email,
+    //    image: session.user.image,
+    //    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //  });
     inputRef.current.value = "";
   };
 
@@ -59,6 +68,7 @@ const InputBox = () => {
         <div className="inputIcon">
           <CameraIcon className="h-7 text-green-400" />
           <p className="text-xs sm:text-sm xl:text-base">Photos/Video</p>
+          <input type="file" hid/>
         </div>
         <div className="inputIcon">
           <EmojiHappyIcon className="h-7 text-yellow-300" />
@@ -67,6 +77,6 @@ const InputBox = () => {
       </div>
     </div>
   );
-};
+};;
 
 export default InputBox;
