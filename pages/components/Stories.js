@@ -32,7 +32,7 @@ const stories = [
 
 const Stories = () => {
   return (
-    <div className=" flex justify-center space-x-3 max-auto">
+    <div className=" flex items-center space-x-4  max-auto ">
       {stories.map((story) => (
         <StoryCard
           key={story.src}

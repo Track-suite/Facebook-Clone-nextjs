@@ -1,6 +1,7 @@
 import React from "react";
 import Stories from "./Stories";
 import InputBox from "./InputBox";
+import Posts from "./Posts";
 
 const Feed = () => {
   return (
@@ -11,9 +12,10 @@ const Feed = () => {
       <div className="max-auto max-w-md md:max-w-lg lg:max-w-2xl">
         {/* Stories */}
         <Stories />
-        <InputBox />
         {/* InputBox */}
+        <InputBox />
         {/* Posts */}
+        <Posts />
       </div>
     </div>
   );

@@ -2,9 +2,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
 import { CameraIcon, VideoCameraIcon } from "@heroicons/react/solid";
+// import { getFirestore, serverTimestamp, FieldValue } from "firebase/firestore";
 import { useRef } from "react";
 import { db } from "../../firebase";
-import firbase from "firebase";
+import firebase from "firebase/compat/app";
+import { collection, addDoc } from "firebase/firestore"; 
+
 
 const InputBox = () => {
   const { data: session } = useSession();
@@ -15,12 +18,14 @@ const InputBox = () => {
 
     if (!inputRef.current.value) return;
 
-    db.collection("posts").add({
+    db.collection("posts").doc({
       message: inputRef.current.value,
       name: session.user.name,
       email: session.user.email,
       image: session.user.image,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
+    inputRef.current.value = "";
   };
 
   return (
