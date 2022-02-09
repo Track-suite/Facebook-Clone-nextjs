@@ -1,4 +1,5 @@
-import { getStorage } from "firebase/storage";
+import { getStorage, ref } from "firebase/storage";
+
 import firebase from "firebase/compat/app";
 import { getFirestore } from "firebase/firestore";
 
@@ -18,7 +19,10 @@ const app = !firebase.apps.length
   : firebase.app(); //initializeApp(firebaseConfig);
 
 const db = getFirestore();
-const storageRef = getStorage();
+
+const storage = getStorage();
+
+const storageRef = ref(storage);
 
 export { db, storageRef };
 // const analytics = getAnalytics(app);

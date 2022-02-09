@@ -1,18 +1,20 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
+
 import { CameraIcon, VideoCameraIcon } from "@heroicons/react/solid";
-import { getFirestore, serverTimestamp, FieldValue } from "firebase/firestore";
-import { useRef } from "react";
-import { db } from "../../firebase";
+// import { getFirestore, serverTimestamp, FieldValue } from "firebase/firestore";
+import { useRef, useState } from "react";
+import { db, storageRef } from "../../firebase";
 import firebase from "firebase/compat/app";
-import { collection, addDoc } from "firebase/firestore"; 
-
-
+import { collection, addDoc } from "firebase/firestore";
+// import { storage } from "firebase-admin";
 
 const InputBox = () => {
   const { data: session } = useSession();
   const inputRef = useRef(null);
+  const filepickerRef = useRef(null);
+  const [imageToPosts, setImageToPost] = useState(null);
 
   const sendPost = (e) => {
     e.preventDefault();
@@ -25,16 +27,53 @@ const InputBox = () => {
       email: session.user.email,
       image: session.user.image,
       // timestamp: firebase.firestore.FieldValue.serverTimestamp,
+    }).then((doc) => {
+      if (imageToPosts) {
+        const uploadTask = storageRef(`posts/${doc.id}`)(
+          imageToPosts,
+          "data_url"
+        );
+
+        removeImage();
+
+        uploadTask.on(
+          "state_change",
+          null,
+          (error) => console.error(error),
+          () => {
+            // when upload completes
+            storage
+              .ref("posts")
+              .child(doc.id)
+              .getDownloadURL()
+              .then((url) => {
+                db.collection("posts").doc(doc.id).set(
+                  {
+                    postImage: url,
+                  },
+                  { merge: true }
+                );
+              });
+          }
+        );
+      }
     });
 
-    //  db.collection("posts").add({
-    //    message: inputRef.current.value,
-    //    name: session.user.name,
-    //    email: session.user.email,
-    //    image: session.user.image,
-    //    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //  });
     inputRef.current.value = "";
+  };
+
+  const addImageToPost = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = (readerEvent) => {
+      setImageToPost(readerEvent.target.result);
+    };
+  };
+
+  const removeImage = () => {
+    setImageToPost(null);
   };
 
   return (
@@ -58,6 +97,17 @@ const InputBox = () => {
             Submit
           </button>
         </form>
+
+        {imageToPosts && (
+          <div
+            onClick={removeImage}
+            className="flex flex-col filter hover:brightness-100 transition 
+            duration-150 transform hover:scale-105 cursor-pointer"
+          >
+            <img className="h-10 object-contain" src={imageToPosts} alt="" />
+            <p className="text-xs text-red-500 text-center">Remove</p>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-evenly p-3 border-t">
@@ -65,10 +115,18 @@ const InputBox = () => {
           <VideoCameraIcon className="h-7 text-red-500" />{" "}
           <p className="text-xs sm:text-sm xl:text-base">Live Video</p>
         </div>
-        <div className="inputIcon">
+        <div
+          onClick={() => filepickerRef.current.click()}
+          className="inputIcon"
+        >
           <CameraIcon className="h-7 text-green-400" />
           <p className="text-xs sm:text-sm xl:text-base">Photos/Video</p>
-          <input type="file" hid/>
+          <input
+            ref={filepickerRef}
+            onChange={addImageToPost}
+            type="file"
+            hidden
+          />
         </div>
         <div className="inputIcon">
           <EmojiHappyIcon className="h-7 text-yellow-300" />
